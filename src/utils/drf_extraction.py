@@ -144,7 +144,7 @@ def main():
                         required=True,
                         help="The domain names separated with a comma - NO SPACES.")
     parser.add_argument("--dtype",
-                        choices=['absa', 'rumor', 'mnli'],
+                        choices=['absa', 'rumor', 'mnli',  'semevalt6'],
                         default='rumor',
                         type=str,
                         required=True,

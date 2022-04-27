@@ -14,7 +14,6 @@
 
 
 ### Environment Variables
-GPU_ID=0
 export TOKENIZERS_PARALLELISM=false
 export PYTHONPATH=`pwd`
 
@@ -50,7 +49,7 @@ do
   --drf_set_location ./runs/${TASK}/${TRG_DOMAIN}/drf_sets \
   --prompts_data_dir ./runs/${TASK}/${TRG_DOMAIN}/prompt_annotations
 
-  CUDA_VISIBLE_DEVICES=${GPU_ID} python ./train.py \
+  python ./train.py \
   --dataset_name ${TASK} \
   --src_domains ${SRC_DOMAINS} \
   --trg_domain ${TRG_DOMAIN} \

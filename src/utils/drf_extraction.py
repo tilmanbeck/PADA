@@ -46,6 +46,7 @@ def preproc(args):
         # This will be used for the Mutual Information calculation between N-grams and the domain label.
         for domain in domains:
             dom_id = 1 if domain == src else 0
+            #train_path = os.path.join("/home/tilman/Repositories/PADA/data", f'{data_type}_data', domain, "train")
             train_path = os.path.join("data", f'{data_type}_data', domain, "train")
             with open(train_path, 'rb') as f:
                 (tmp_train, _) = pickle.load(f)
@@ -55,7 +56,7 @@ def preproc(args):
                 for tr_ex in tmp_train:
                     train.append(tr_ex[0] + " " + tr_ex[1])
             else:
-                train = train + tmp_train
+                train = train + list(tmp_train)
 
         # Accumulate only source examples.
         # This will be used for measuring N-grams frequency (appearance) in the source domain.
@@ -73,6 +74,7 @@ def preproc(args):
         # This will be used for measuring N-grams frequency (appearance) in the non-source domains.
         for domain in domains:
             if domain != src:
+                #tmp_non_src_path = os.path.join("/home/tilman/Repositories/PADA/data", f'{data_type}_data', domain, "train")
                 tmp_non_src_path = os.path.join("data", f'{data_type}_data', domain, "train")
                 with open(tmp_non_src_path, 'rb') as f:
                     (tmp_non_src, _) = pickle.load(f)
@@ -80,7 +82,7 @@ def preproc(args):
                     for trg_ex in tmp_non_src:
                         non_source.append(trg_ex[0] + " " + trg_ex[1])
                 else:
-                    non_source = non_source + tmp_non_src
+                    non_source = non_source + list(tmp_non_src)
 
         if isinstance(train[0], list):
             train = [' '.join(train_instance) for train_instance in train]
@@ -144,7 +146,7 @@ def main():
                         required=True,
                         help="The domain names separated with a comma - NO SPACES.")
     parser.add_argument("--dtype",
-                        choices=['absa', 'rumor', 'mnli',  'semevalt6'],
+                        choices=['absa', 'rumor', 'mnli',  'semevalt6', 'stab2018'],
                         default='rumor',
                         type=str,
                         required=True,

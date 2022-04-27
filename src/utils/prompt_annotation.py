@@ -49,7 +49,7 @@ def main():
                         required=False,
                         help="The domain names separated with a comma - NO SPACES.")
     parser.add_argument("--root_data_dir",
-                        choices=['rumor_data', 'mnli_data', 'absa_data'],
+                        choices=['rumor_data', 'mnli_data', 'absa_data', 'stab2018_data'],
                         default='rumor_data',
                         type=str,
                         required=False,

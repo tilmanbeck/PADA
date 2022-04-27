@@ -1,6 +1,7 @@
 from src.utils.constants import DATA_DIR, EXP_DIR
 from src.data_processing.absa.pada import AbsaSeq2SeqPadaDataProcessor, AbsaSeq2SeqPadaDataset
 from src.data_processing.rumor.pada import RumorPadaDataProcessor, RumorPadaDataset
+from src.data_processing.stab2018.pada import Stab2018PadaDataProcessor, Stab2018PadaDataset
 from src.modeling.token_classification.pada_seq2seq_token_classifier import PadaSeq2SeqTokenClassifierGeneratorMulti
 from src.modeling.text_classification.pada_text_classifier import PadaTextClassifierMulti
 from src.utils.train_utils import set_seed, ModelCheckpointWithResults, LoggingCallback
@@ -12,11 +13,13 @@ from syct import timer
 SUPPORTED_MODELS = {
     "PADA-rumor": (PadaTextClassifierMulti, RumorPadaDataProcessor, RumorPadaDataset),
     "PADA-absa": (PadaSeq2SeqTokenClassifierGeneratorMulti, AbsaSeq2SeqPadaDataProcessor, AbsaSeq2SeqPadaDataset),
+    "PADA-stab2018": (PadaTextClassifierMulti, Stab2018PadaDataProcessor, Stab2018PadaDataset)
 }
 
 SUPPORTED_DATASETS = {
     "rumor",
-    "absa"
+    "absa",
+    "stab2018"
 }
 
 args_dict = dict(
@@ -104,7 +107,7 @@ def train_pada_experiment(args):
 
     set_seed(model_hparams_dict.pop("seed"))
     dataset_name = model_hparams_dict.pop("dataset_name")
-    if dataset_name  == "rumor":
+    if dataset_name in ["rumor", "stab2018"]:
         model_hparams_dict.pop("proportion_aspect")
         model_hparams_dict.pop("multi_diversity_penalty")
     else:

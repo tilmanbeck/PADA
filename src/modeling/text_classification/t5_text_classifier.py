@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import List, Any, Dict, Tuple, Union
 from src.utils.train_utils import NUM_CPU
 from src.data_processing.rumor.base import RumorDataProcessor
+from src.data_processing.stab2018.base import Stab2018DataProcessor
 from src.modeling.text_classification.cnn_classifier import CnnClassifier
 from transformers import (
     AdamW,
@@ -79,7 +80,7 @@ class T5TextClassifier(LightningModule):
     def _init_eval_metric_scorer(eval_metrics) -> Dict[str, Metric]:
         return {metric: load_metric(metric.split("_")[1]) for metric in eval_metrics}
 
-    def _init_datasets(self) -> Tuple[RumorDataProcessor, Dict[str, Dataset]]:
+    def _init_datasets(self) -> Tuple[Union[RumorDataProcessor, Stab2018DataProcessor], Dict[str, Dataset]]:
         data_processor = self.hparams.data_procesor_obj(self.hparams.src_domains, self.hparams.trg_domain,
                                                         self.hparams.data_dir, self.hparams.experiment_dir)
         dataset_kwargs = dict(

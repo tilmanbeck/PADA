@@ -7,7 +7,7 @@ import pickle
 
 
 def load_raw_sentences(args, domain, mode):
-    data_dir = os.path.join('data', args.root_data_dir, domain)
+    data_dir = os.path.join(args.data_dir, args.root_data_dir, domain)
     train_path = os.path.join(data_dir, mode)
     print("LOOKING AT {}".format(train_path))
     with open(train_path, 'rb') as f:
@@ -43,6 +43,11 @@ def return_unique_list_and_keep_sorted(sorted_closets_drfs_ids):
 def main():
     parser = argparse.ArgumentParser()
 
+    parser.add_argument("--data_dir",
+                        default="./data/",
+                        type=str,
+                        required=True,
+                        help="Parent directory where data files are stored")
     parser.add_argument("--domains",
                         default='charliehebdo,ferguson,germanwings-crash,ottawashooting,sydneysiege',
                         type=str,

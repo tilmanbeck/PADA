@@ -46,8 +46,7 @@ def preproc(args):
         # This will be used for the Mutual Information calculation between N-grams and the domain label.
         for domain in domains:
             dom_id = 1 if domain == src else 0
-            #train_path = os.path.join("/home/tilman/Repositories/PADA/data", f'{data_type}_data', domain, "train")
-            train_path = os.path.join("data", f'{data_type}_data', domain, "train")
+            train_path = os.path.join(args.data_dir, f'{data_type}_data', domain, "train")
             with open(train_path, 'rb') as f:
                 (tmp_train, _) = pickle.load(f)
                 tmp_domain_labels = [dom_id] * len(tmp_train)
@@ -60,7 +59,7 @@ def preproc(args):
 
         # Accumulate only source examples.
         # This will be used for measuring N-grams frequency (appearance) in the source domain.
-        src_path = os.path.join("data", f'{data_type}_data', src, "train")
+        src_path = os.path.join(args.data_dir, f'{data_type}_data', src, "train")
         source = []
         with open(src_path, 'rb') as f:
             (tmp_source, _) = pickle.load(f)
@@ -74,8 +73,7 @@ def preproc(args):
         # This will be used for measuring N-grams frequency (appearance) in the non-source domains.
         for domain in domains:
             if domain != src:
-                #tmp_non_src_path = os.path.join("/home/tilman/Repositories/PADA/data", f'{data_type}_data', domain, "train")
-                tmp_non_src_path = os.path.join("data", f'{data_type}_data', domain, "train")
+                tmp_non_src_path = os.path.join(args.data_dir, f'{data_type}_data', domain, "train")
                 with open(tmp_non_src_path, 'rb') as f:
                     (tmp_non_src, _) = pickle.load(f)
                 if data_type == 'mnli':
@@ -140,6 +138,11 @@ def preproc(args):
 def main():
     parser = argparse.ArgumentParser()
 
+    parser.add_argument("--data_dir",
+                        default="./data/",
+                        type=str,
+                        required=True,
+                        help="Parent directory where data files are stored")
     parser.add_argument("--domains",
                         default='ferguson,germanwings-crash,ottawashooting,sydneysiege',
                         type=str,

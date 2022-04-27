@@ -1,4 +1,17 @@
 #!/bin/bash
+#
+#SBATCH --job-name=pada-stab2018
+#SBATCH --output=/ukp-storage-1/beck/slurm_output/pada-stab2018
+#SBATCH --mail-user=beck@ukp.informatik.tu-darmstadt.de
+#SBATCH --mail-type=ALL
+#SBATCH --partition=ukp
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=64GB
+#SBATCH --gres=gpu:1
+#SBATCH --exclude=turtok
+
+
 
 ### Environment Variables
 GPU_ID=0

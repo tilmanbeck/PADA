@@ -11,7 +11,8 @@
 #SBATCH --gres=gpu:1
 #SBATCH --exclude=turtok
 
-
+. "/ukp-storage-1/beck/miniconda3.8/etc/profile.d/conda.sh"
+conda activate pada
 
 ### Environment Variables
 export TOKENIZERS_PARALLELISM=false
@@ -23,6 +24,7 @@ TRAIN_BATCH_SIZE=32
 EVAL_BATCH_SIZE=32
 EPOCHS=5
 SEED=41
+DATADIR=/ukp-storage-1/beck/Repositories/PADA/data
 
 
 DOMAINS=(abortion cloning deathpenalty guncontrol marijuanalegalization minimumwage nuclearenergy schooluniforms)
@@ -37,19 +39,21 @@ do
   echo "Running experiment for $SRC_DOMAINS as source domains and $TRG_DOMAIN as target domain"
 
   echo "Extracting DRFs for the current experiment."
-  python ./src/utils/drf_extraction.py \
+  python /ukp-storage-1/beck/Repositories/PADA/src/utils/drf_extraction.py \
+  --data_dir ${DATADIR} \
   --domains ${SRC_DOMAINS} \
   --dtype ${TASK} \
-  --drf_set_location ./runs/${TASK}/${TRG_DOMAIN}/drf_sets
+  --drf_set_location /ukp-storage-1/beck/Repositories/PADA/runs/${TASK}/${TRG_DOMAIN}/drf_sets
 
   echo "Annotating training examples with DRF-based prompts."
-  python ./src/utils/prompt_annotation.py \
+  python /ukp-storage-1/beck/Repositories/PADA/src/utils/prompt_annotation.py \
+  --data_dir ${DATADIR} \
   --domains ${SRC_DOMAINS} \
   --root_data_dir ${TASK}_data \
-  --drf_set_location ./runs/${TASK}/${TRG_DOMAIN}/drf_sets \
-  --prompts_data_dir ./runs/${TASK}/${TRG_DOMAIN}/prompt_annotations
+  --drf_set_location /ukp-storage-1/beck/Repositories/PADA/runs/${TASK}/${TRG_DOMAIN}/drf_sets \
+  --prompts_data_dir /ukp-storage-1/beck/Repositories/PADA/runs/${TASK}/${TRG_DOMAIN}/prompt_annotations
 
-  python ./train.py \
+  python /ukp-storage-1/beck/Repositories/PADA/train.py \
   --dataset_name ${TASK} \
   --src_domains ${SRC_DOMAINS} \
   --trg_domain ${TRG_DOMAIN} \

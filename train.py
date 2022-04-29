@@ -77,7 +77,7 @@ def train_pada_experiment(args):
     hparams.output_dir.mkdir(exist_ok=True, parents=True)
     hparams.output_dir = str(hparams.output_dir)
 
-    main_eval_metric = "binary_f1"
+    main_eval_metric = "macro_f1" # "binary_f1"
     checkpoint_callback = ModelCheckpointWithResults(dirpath=hparams.output_dir,
                                                      filename=f"best_dev_{main_eval_metric}",
                                                      monitor=f"dev_{main_eval_metric}",
@@ -100,6 +100,7 @@ def train_pada_experiment(args):
             gradient_clip_val=model_hparams_dict.pop("max_grad_norm"),
             callbacks=callbacks,
             logger=logger,
+            log_every_n_steps=100,
             fast_dev_run=model_hparams_dict.pop("fast_dev_run"),
             deterministic=True,
             benchmark=False

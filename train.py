@@ -100,7 +100,6 @@ def train_pada_experiment(args):
             gradient_clip_val=model_hparams_dict.pop("max_grad_norm"),
             callbacks=callbacks,
             logger=logger,
-            log_every_n_steps=100,
             fast_dev_run=model_hparams_dict.pop("fast_dev_run"),
             deterministic=True,
             benchmark=False

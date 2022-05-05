@@ -99,7 +99,7 @@ class PadaTextClassifier(T5TextClassifier):
         """
         loss = self._forward_step(input_ids=batch["input_ids"], attention_mask=batch["attention_mask"],
                                   labels=batch["output_label_id"], decoder_labels=batch["prompt_output_ids"])["loss"]
-        self.log("train_loss", loss, on_step=False, on_epoch=False, prog_bar=True, logger=True)
+        self.log("train_loss", loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
         return loss
 
     @staticmethod

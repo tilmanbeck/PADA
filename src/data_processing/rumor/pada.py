@@ -57,7 +57,7 @@ def test_RumorPadaDataProcessor():
 class RumorPadaDataset(Dataset):
 
     DOMAIN_PROMPT = "domain"
-    RUMOR_PROMPT = "rumor"
+    CLASS_PROMPT = "rumor"
     DRF_DELIMITER = ", "
 
     def __init__(self, split: str, data_processor: RumorPadaDataProcessor, tokenizer: T5TokenizerFast,

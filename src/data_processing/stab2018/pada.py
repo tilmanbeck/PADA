@@ -57,7 +57,7 @@ def test_Stab2018PadaDataProcessor():
 class Stab2018PadaDataset(Dataset):
 
     DOMAIN_PROMPT = "target"
-    STAB2018_PROMPT = "argument"
+    CLASS_PROMPT = "argument"
     DRF_DELIMITER = ", "
 
     def __init__(self, split: str, data_processor: Stab2018PadaDataProcessor, tokenizer: T5TokenizerFast,

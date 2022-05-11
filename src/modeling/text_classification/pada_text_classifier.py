@@ -210,7 +210,7 @@ class PadaTextClassifierMulti(PadaTextClassifier):
         domain_input_ids, domain_attention_mask = self._get_domain_prompted_tensors(input_ids, attention_mask)
         batch_multi = defaultdict(list)
         batch_multi["generated_prompts"] = self.generate_multiple_texts(domain_input_ids, domain_attention_mask)
-        batch_multi["generated_prompts"].append([self.datasets["test"].RUMOR_PROMPT] * input_ids.size(0))
+        batch_multi["generated_prompts"].append([self.datasets["test"].CLASS_PROMPT] * input_ids.size(0))
         for batch_gen_prompts in batch_multi["generated_prompts"]:
             gen_prompt_input_ids, gen_prompt_attention_mask = self._get_gen_prompted_tensors(batch_gen_prompts,
                                                                                              batch_input_texts)

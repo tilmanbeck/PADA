@@ -1,6 +1,7 @@
 from src.utils.constants import PROJECT_ROOT_DIR, DATA_DIR, EXP_DIR
 from src.data_processing.absa.pada import AbsaSeq2SeqPadaDataProcessor, AbsaSeq2SeqPadaDataset
 from src.data_processing.rumor.pada import RumorPadaDataProcessor, RumorPadaDataset
+from src.data_processing.stab2018.pada import Stab2018PadaDataProcessor, Stab2018PadaDataset
 from src.modeling.token_classification.pada_seq2seq_token_classifier import PadaSeq2SeqTokenClassifierGeneratorMulti
 from src.modeling.text_classification.pada_text_classifier import PadaTextClassifierMulti
 from src.utils.train_utils import set_seed, LoggingCallback
@@ -12,11 +13,13 @@ from syct import timer
 SUPPORTED_MODELS = {
     "PADA-rumor": (PadaTextClassifierMulti, RumorPadaDataProcessor, RumorPadaDataset),
     "PADA-absa": (PadaSeq2SeqTokenClassifierGeneratorMulti, AbsaSeq2SeqPadaDataProcessor, AbsaSeq2SeqPadaDataset),
+    "PADA-stab2018": (PadaTextClassifierMulti, Stab2018PadaDataProcessor, Stab2018PadaDataset)
 }
 
 SUPPORTED_DATASETS = {
     "rumor",
-    "absa"
+    "absa",
+    "stab2018"
 }
 
 args_dict = dict(
@@ -42,7 +45,8 @@ args_dict = dict(
     num_return_sequences=4,
     num_beam_groups=5,
     diversity_penalty=0.2,
-    eval_metrics=["binary_f1", "micro_f1", "macro_f1", "weighted_f1"],
+    #    eval_metrics=["binary_f1", "micro_f1", "macro_f1", "weighted_f1"],
+    eval_metrics=["micro_f1", "macro_f1", "weighted_f1"],
     proportion_aspect=0.3333,
     gen_constant=1.0,
     multi_diversity_penalty=1.0,
@@ -89,7 +93,7 @@ def eval_trained_pada_model(args):
 
     set_seed(model_hparams_dict.pop("seed"))
     dataset_name = model_hparams_dict.pop("dataset_name")
-    if dataset_name in ["rumor", "mnli"]:
+    if dataset_name in ["rumor", "mnli", "stab2018"]:
         model_hparams_dict.pop("proportion_aspect")
         model_hparams_dict.pop("multi_diversity_penalty")
     else:

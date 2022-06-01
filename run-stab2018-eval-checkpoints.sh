@@ -23,6 +23,7 @@ export PYTHONPATH=${CWD}
 CKPT_PATH=${CWD}/checkpoints/
 TASK=stab2018
 EVAL_BATCH_SIZE=32
+EPOCHS=5
 SEED=41
 
 DOMAINS=(abortion cloning deathpenalty guncontrol marijuanalegalization minimumwage nuclearenergy schooluniforms)
@@ -59,5 +60,6 @@ do
   --trg_domain ${TRG_DOMAIN} \
   --eval_batch_size ${EVAL_BATCH_SIZE} \
   --seed ${SEED} \
-  --ckpt_path ${CKPT_PATH}
+  --ckpt_path /ukp-storage-1/beck/Repositories/PADA/runs/${TASK}/${TRG_DOMAIN}/PADA/e${EPOCHS}/b${EVAL_BATCH_SIZE}/a0.2/best_dev_macro_f1.ckpt \
+  --output_dir /ukp-storage-1/beck/Repositories/PADA/runs/${TASK}_target_domain_label/${TRG_DOMAIN}/
 done

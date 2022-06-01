@@ -3,7 +3,7 @@ import os
 from src.utils.constants import PROJECT_ROOT_DIR, DATA_DIR, EXP_DIR
 from src.data_processing.absa.pada import AbsaSeq2SeqPadaDataProcessor, AbsaSeq2SeqPadaDataset
 from src.data_processing.rumor.pada import RumorPadaDataProcessor, RumorPadaDataset
-from src.data_processing.stab2018.pada import Stab2018PadaDataProcessor, Stab2018PadaDataset
+from src.data_processing.stab2018.pada import Stab2018PadaDataProcessor, Stab2018PadaDataset, stab2018_domain_label_mapping
 from src.modeling.token_classification.pada_seq2seq_token_classifier import PadaSeq2SeqTokenClassifierGeneratorMulti
 from src.modeling.text_classification.pada_text_classifier import PadaTextClassifierMulti
 from src.utils.train_utils import set_seed, LoggingCallback
@@ -23,6 +23,10 @@ SUPPORTED_DATASETS = {
     "rumor",
     "absa",
     "stab2018"
+}
+
+DOMAIN_LABEL_MAPPINGS = {
+    'stab2018': stab2018_domain_label_mapping
 }
 
 args_dict = dict(
@@ -112,7 +116,10 @@ def eval_trained_pada_model(args):
                                            data_dir=hparams.data_dir,
                                            experiment_dir=experiment_dir,
                                            output_dir=hparams.output_dir).eval()
+    # indicate if generated domain labels should be replaced by target domain label
     model.replace_domain_label = replace_domain_label
+    # pass label mapping
+    model.domain_label_mapping = DOMAIN_LABEL_MAPPINGS[dataset_name]
     trainer = Trainer(**train_args)
     trainer.test(model)
 

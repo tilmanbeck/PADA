@@ -201,13 +201,13 @@ class PadaTextClassifierMulti(PadaTextClassifier):
         ens_preds = ens_logits.detach().cpu().argmax(dim=-1).tolist()
         return ens_preds
 
-    def convert_domain_label(self, generated_prompts, domain_label):
+    def convert_domain_label(self, generated_prompts, domain_label, domain_label_mapping):
         prompts_with_target_domain_label = []
         for i in generated_prompts:
             tmp = []
             for idx, text in enumerate(i):
                 split_text = text.split('-')
-                tmp.append(domain_label[idx] + ' - ' + " ".join(split_text[1:]))
+                tmp.append(domain_label_mapping[domain_label[idx]] + ' - ' + " ".join(split_text[1:]))
             prompts_with_target_domain_label.append(tmp)
         return prompts_with_target_domain_label
 
@@ -222,7 +222,7 @@ class PadaTextClassifierMulti(PadaTextClassifier):
         batch_multi["generated_prompts"] = self.generate_multiple_texts(domain_input_ids, domain_attention_mask)
         domain_label = batch['domain_label']
         if self.replace_domain_label:
-            prompts_with_target_domain_label = self.convert_domain_label(batch_multi["generated_prompts"], domain_label)
+            prompts_with_target_domain_label = self.convert_domain_label(batch_multi["generated_prompts"], domain_label, self.domain_label_mapping)
             batch_multi["generated_prompts"] = prompts_with_target_domain_label
 
         batch_multi["generated_prompts"].append([self.datasets["test"].CLASS_PROMPT] * input_ids.size(0))

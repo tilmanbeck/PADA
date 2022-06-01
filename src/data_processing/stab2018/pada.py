@@ -9,6 +9,17 @@ from src.data_processing.stab2018.base import Stab2018DataProcessor
 from src.utils.constants import DATA_DIR, EXP_DIR
 import torch
 
+stab2018_domain_label_mapping = {
+    'abortion': 'abortion',
+    'deathpenalty': 'death penalty',
+    'guncontrol': 'gun control',
+    'marijuanalegalization': 'marijuana legalization',
+    'minimumwage': 'minimum wage',
+    'nuclearenergy': 'nuclear energy',
+    'schooluniforms': 'school uniforms',
+    'cloning': 'cloning'
+}
+
 
 class Stab2018PadaDataProcessor(Stab2018DataProcessor):
 

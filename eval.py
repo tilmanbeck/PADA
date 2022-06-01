@@ -1,3 +1,5 @@
+import os
+
 from src.utils.constants import PROJECT_ROOT_DIR, DATA_DIR, EXP_DIR
 from src.data_processing.absa.pada import AbsaSeq2SeqPadaDataProcessor, AbsaSeq2SeqPadaDataset
 from src.data_processing.rumor.pada import RumorPadaDataProcessor, RumorPadaDataset
@@ -9,6 +11,7 @@ from pathlib import Path
 from argparse import Namespace, ArgumentParser
 from pytorch_lightning import Trainer
 from syct import timer
+os.environ['TOKENIZERS_PARALLELISM']="false"
 
 SUPPORTED_MODELS = {
     "PADA-rumor": (PadaTextClassifierMulti, RumorPadaDataProcessor, RumorPadaDataset),
@@ -50,6 +53,7 @@ args_dict = dict(
     proportion_aspect=0.3333,
     gen_constant=1.0,
     multi_diversity_penalty=1.0,
+    replace_domain_label=False
 )
 
 
@@ -100,12 +104,15 @@ def eval_trained_pada_model(args):
         model_hparams_dict.pop("gen_constant")
     model_name = model_hparams_dict.pop("model_name")
 
+    replace_domain_label = args.replace_domain_label
+
     model_obj, data_procesor_obj, dataset_obj = SUPPORTED_MODELS[f"{model_name}-{dataset_name}"]
     model = model_obj.load_from_checkpoint(checkpoint_path=test_ckpt,
                                            eval_batch_size=hparams.eval_batch_size,
                                            data_dir=hparams.data_dir,
                                            experiment_dir=experiment_dir,
                                            output_dir=hparams.output_dir).eval()
+    model.replace_domain_label = replace_domain_label
     trainer = Trainer(**train_args)
     trainer.test(model)
 

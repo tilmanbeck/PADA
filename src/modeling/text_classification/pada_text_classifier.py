@@ -201,6 +201,16 @@ class PadaTextClassifierMulti(PadaTextClassifier):
         ens_preds = ens_logits.detach().cpu().argmax(dim=-1).tolist()
         return ens_preds
 
+    def convert_domain_label(self, generated_prompts, domain_label):
+        prompts_with_target_domain_label = []
+        for i in generated_prompts:
+            tmp = []
+            for idx, text in enumerate(i):
+                split_text = text.split('-')
+                tmp.append(domain_label[idx] + ' - ' + " ".join(split_text[1:]))
+            prompts_with_target_domain_label.append(tmp)
+        return prompts_with_target_domain_label
+
     def test_step(self, batch: BatchEncoding, batch_idx: int) -> Dict[str, Union[Tensor, List[str], int]]:
         input_ids = batch["input_ids"]
         attention_mask = batch["attention_mask"]
@@ -210,6 +220,11 @@ class PadaTextClassifierMulti(PadaTextClassifier):
         domain_input_ids, domain_attention_mask = self._get_domain_prompted_tensors(input_ids, attention_mask)
         batch_multi = defaultdict(list)
         batch_multi["generated_prompts"] = self.generate_multiple_texts(domain_input_ids, domain_attention_mask)
+        domain_label = batch['domain_label']
+        if self.replace_domain_label:
+            prompts_with_target_domain_label = self.convert_domain_label(batch_multi["generated_prompts"], domain_label)
+            batch_multi["generated_prompts"] = prompts_with_target_domain_label
+
         batch_multi["generated_prompts"].append([self.datasets["test"].CLASS_PROMPT] * input_ids.size(0))
         for batch_gen_prompts in batch_multi["generated_prompts"]:
             gen_prompt_input_ids, gen_prompt_attention_mask = self._get_gen_prompted_tensors(batch_gen_prompts,

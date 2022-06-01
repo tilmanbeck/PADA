@@ -13,7 +13,7 @@ class Stab2018DataProcessor:
     ALL_SPLITS = ("train", "dev", "test")
     WORD_DELIMITER = " "
 
-    def __init__(self, src_domains: List[str],  trg_domain: str, data_dir: Union[str, Path]):
+    def __init__(self, src_domains: List[str],  trg_domain: str, data_dir: Union[str, Path], experiment_dir: Union[str, Path]):
         self.data_dir = data_dir
         self.src_domains = src_domains
         self.trg_domain = trg_domain

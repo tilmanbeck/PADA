@@ -69,7 +69,7 @@ class Stab2018DataProcessor:
 
 def test_Stab2018DataProcessor():
     data_processor = Stab2018DataProcessor(["cloning","deathpenalty","guncontrol","marijuanalegalization",
-                                                "minimumwage","nuclearenergy"],"schooluniforms", DATA_DIR)
+                                                "minimumwage","nuclearenergy"],"schooluniforms", DATA_DIR, "")
     print()
     print(data_processor.data["dev"].keys())
     print(len(list(data_processor.data["dev"].values())[0]))
@@ -89,12 +89,13 @@ def test_Stab2018DataProcessor():
 
 
 class Stab2018Dataset(Dataset):
-    def __init__(self, split: str, data_processor: Stab2018DataProcessor, tokenizer: T5TokenizerFast, max_seq_len: int):
+    def __init__(self, split: str, data_processor: Stab2018DataProcessor, tokenizer: T5TokenizerFast, max_seq_len: int,
+                 add_domain: bool = False):
         self.split = split
         self.data_processor = data_processor
         self.tokenizer = tokenizer
         self.max_seq_len = max_seq_len
-        self.tokenized_data = self._init_tokenized_data(split, data_processor, tokenizer, max_seq_len)
+        self.tokenized_data = self._init_tokenized_data(split, data_processor, tokenizer, max_seq_len, add_domain)
 
     def __len__(self):
         return len(self.tokenized_data["example_id"])
@@ -106,11 +107,16 @@ class Stab2018Dataset(Dataset):
         }
 
     @staticmethod
-    def _init_tokenized_data(split, data_processor, tokenizer, max_seq_len):
+    def _init_tokenized_data(split, data_processor, tokenizer, max_seq_len, add_domain):
         data = data_processor.get_split_data(split)
-        tokenized_data = tokenizer(data["input_str"], is_split_into_words=False,
-                                   padding="max_length", truncation=True,
-                                   max_length=max_seq_len, return_tensors="pt", return_attention_mask=True)
+        if add_domain:
+            tokenized_data = tokenizer(data["domain_label"], data["input_str"], is_split_into_words=False,
+                                       padding="max_length", truncation=True,
+                                       max_length=max_seq_len, return_tensors="pt", return_attention_mask=True)
+        else:
+            tokenized_data = tokenizer(data["input_str"], is_split_into_words=False,
+                           padding="max_length", truncation=True,
+                           max_length=max_seq_len, return_tensors="pt", return_attention_mask=True)
         tokenized_data["output_label"] = data["output_label"]
         tokenized_data["input_str"] = data["input_str"]
         tokenized_data["domain_label"] = data["domain_label"]
@@ -119,8 +125,8 @@ class Stab2018Dataset(Dataset):
 
 
 def test_Stab2018Dataset():
-    data_processor = Stab2018DataProcessor(["charliehebdo", "ferguson", "germanwings-crash", "ottawashooting"],
-                                        "sydneysiege", DATA_DIR)
+    data_processor = Stab2018DataProcessor(["cloning","deathpenalty","guncontrol","marijuanalegalization",
+                                                "minimumwage","nuclearenergy"],"schooluniforms", DATA_DIR, "")
     print()
     print(data_processor.data["dev"].keys())
     print(len(list(data_processor.data["dev"].values())[0]))
@@ -129,7 +135,30 @@ def test_Stab2018Dataset():
             print(k, v[0])
         else:
             print(k, v[0], len(v[0]))
-    dataset = Stab2018Dataset("dev", data_processor, T5TokenizerFast.from_pretrained("t5-base"), 64)
+    dataset = Stab2018Dataset("dev", data_processor, T5TokenizerFast.from_pretrained("t5-base"), 64, False)
+    print(len(dataset))
+    for example in dataset:
+        for k, v in example.items():
+            print(k, v)
+        break
+    dataloader = DataLoader(dataset, 4)
+    for batch in dataloader:
+        for k, v in batch.items():
+            print(k, v)
+        break
+
+def test_Stab2018Dataset_with_domain():
+    data_processor = Stab2018DataProcessor(["cloning","deathpenalty","guncontrol","marijuanalegalization",
+                                                "minimumwage","nuclearenergy"],"schooluniforms", DATA_DIR, "")
+    print()
+    print(data_processor.data["dev"].keys())
+    print(len(list(data_processor.data["dev"].values())[0]))
+    for k, v in data_processor.data["dev"].items():
+        if type(v) is not int:
+            print(k, v[0])
+        else:
+            print(k, v[0], len(v[0]))
+    dataset = Stab2018Dataset("dev", data_processor, T5TokenizerFast.from_pretrained("t5-base"), 64, True)
     print(len(dataset))
     for example in dataset:
         for k, v in example.items():

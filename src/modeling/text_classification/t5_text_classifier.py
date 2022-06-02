@@ -62,7 +62,8 @@ class T5TextClassifier(LightningModule):
                  experiment_dir: str,
                  max_seq_len: int,
                  dataset_specific_kwargs: Namespace = None,
-                 num_labels: int = 2):
+                 num_labels: int = 2,
+                 add_domain: bool = False):
         super().__init__()
         self.save_hyperparameters()
         self.tokenizer = T5TokenizerFast.from_pretrained(self.hparams.t5_model_name)
@@ -86,7 +87,8 @@ class T5TextClassifier(LightningModule):
         dataset_kwargs = dict(
             data_processor=data_processor,
             tokenizer=self.tokenizer,
-            max_seq_len=self.hparams.max_seq_len
+            max_seq_len=self.hparams.max_seq_len,
+            add_domain=self.hparams.add_domain
         )
         if self.hparams.dataset_specific_kwargs is not None:
             ### Backward Compatibility

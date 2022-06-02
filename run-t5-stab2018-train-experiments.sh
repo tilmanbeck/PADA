@@ -25,7 +25,7 @@ EVAL_BATCH_SIZE=32
 EPOCHS=5
 SEED=41
 DATADIR=/ukp-storage-1/beck/Repositories/PADA/data
-OUTPUT_DIR=/ukp-storage-1/beck/Repositories/PADA/runs/T5
+OUTPUT_DIR=/ukp-storage-1/beck/Repositories/PADA/runs/T5-topic
 
 DOMAINS=(abortion cloning deathpenalty guncontrol marijuanalegalization minimumwage nuclearenergy schooluniforms)
 for i in "${!DOMAINS[@]}"

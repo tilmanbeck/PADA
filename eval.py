@@ -4,8 +4,10 @@ from src.utils.constants import PROJECT_ROOT_DIR, DATA_DIR, EXP_DIR
 from src.data_processing.absa.pada import AbsaSeq2SeqPadaDataProcessor, AbsaSeq2SeqPadaDataset
 from src.data_processing.rumor.pada import RumorPadaDataProcessor, RumorPadaDataset
 from src.data_processing.stab2018.pada import Stab2018PadaDataProcessor, Stab2018PadaDataset, stab2018_domain_label_mapping
+from src.data_processing.stab2018.base import Stab2018DataProcessor, Stab2018Dataset
 from src.modeling.token_classification.pada_seq2seq_token_classifier import PadaSeq2SeqTokenClassifierGeneratorMulti
 from src.modeling.text_classification.pada_text_classifier import PadaTextClassifierMulti
+from src.modeling.text_classification.t5_text_classifier import T5TextClassifier
 from src.utils.train_utils import set_seed, LoggingCallback
 from pathlib import Path
 from argparse import Namespace, ArgumentParser
@@ -16,7 +18,8 @@ os.environ['TOKENIZERS_PARALLELISM']="false"
 SUPPORTED_MODELS = {
     "PADA-rumor": (PadaTextClassifierMulti, RumorPadaDataProcessor, RumorPadaDataset),
     "PADA-absa": (PadaSeq2SeqTokenClassifierGeneratorMulti, AbsaSeq2SeqPadaDataProcessor, AbsaSeq2SeqPadaDataset),
-    "PADA-stab2018": (PadaTextClassifierMulti, Stab2018PadaDataProcessor, Stab2018PadaDataset)
+    "PADA-stab2018": (PadaTextClassifierMulti, Stab2018PadaDataProcessor, Stab2018PadaDataset),
+    "T5-stab2018": (T5TextClassifier, Stab2018DataProcessor, Stab2018Dataset)
 }
 
 SUPPORTED_DATASETS = {
@@ -108,6 +111,11 @@ def eval_trained_pada_model(args):
         model_hparams_dict.pop("gen_constant")
     model_name = model_hparams_dict.pop("model_name")
 
+    if model_name in ["T5"]:
+        for param in ["proportion_aspect", "multi_diversity_penalty", "max_drf_seq_len", "gen_constant", "mixture_alpha", "num_return_sequences"]:
+            if param in model_hparams_dict:
+                model_hparams_dict.pop(param)
+
     replace_domain_label = args.replace_domain_label
 
     model_obj, data_procesor_obj, dataset_obj = SUPPORTED_MODELS[f"{model_name}-{dataset_name}"]
@@ -132,7 +140,7 @@ def main():
                                 choices=SUPPORTED_DATASETS)
         elif key == "model_name":
             parser.add_argument(f"--{key}", default=val, type=type(val),
-                                choices=("PADA",))
+                                choices=("PADA","T5"))
         elif type(val) is bool:
             parser.add_argument(f"--{key}", default=val, action="store_true", required=False)
         else:

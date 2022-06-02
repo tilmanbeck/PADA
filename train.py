@@ -64,6 +64,7 @@ args_dict = dict(
     proportion_aspect=0.3333,
     gen_constant=1.0,
     multi_diversity_penalty=0.2,
+    add_domain=False
 )
 
 

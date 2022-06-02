@@ -20,7 +20,7 @@ export TOKENIZERS_PARALLELISM=false
 export PYTHONPATH=${CWD}
 
 ### Hyperparameters
-CKPT_PATH=${CWD}/checkpoints/
+CKPT_PATH=${CWD}/runs
 TASK=stab2018
 EVAL_BATCH_SIZE=32
 EPOCHS=5
@@ -61,5 +61,6 @@ do
   --eval_batch_size ${EVAL_BATCH_SIZE} \
   --seed ${SEED} \
   --ckpt_path /ukp-storage-1/beck/Repositories/PADA/runs/${TASK}/${TRG_DOMAIN}/PADA/e${EPOCHS}/b${EVAL_BATCH_SIZE}/a0.2/best_dev_macro_f1.ckpt \
-  --output_dir /ukp-storage-1/beck/Repositories/PADA/runs/${TASK}_target_domain_label/${TRG_DOMAIN}/
+  --output_dir /ukp-storage-1/beck/Repositories/PADA/runs/${TASK}_target_domain_label/${TRG_DOMAIN}/ \
+  --replace_domain_label
 done

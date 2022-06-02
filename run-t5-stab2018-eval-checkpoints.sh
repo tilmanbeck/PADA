@@ -47,5 +47,4 @@ do
   --eval_batch_size ${EVAL_BATCH_SIZE} \
   --seed ${SEED} \
   --ckpt_path /ukp-storage-1/beck/Repositories/PADA/runs/${MODELNAME}/${TASK}/${TRG_DOMAIN}/${MODELNAME}/e${EPOCHS}/b${EVAL_BATCH_SIZE}/a0.2/best_dev_macro_f1.ckpt \
-  --output_dir /ukp-storage-1/beck/Repositories/PADA/runs/${MODELNAME}/${TASK}_target_domain_label/${TRG_DOMAIN}/
-done
+  --output_dir /ukp-storage-1/beck/Repositories/PADA/runs/${MODELNAME}/${TASK}/${TRG_DOMAIN}/

@@ -25,7 +25,7 @@ EVAL_BATCH_SIZE=32
 EPOCHS=5
 SEED=41
 DATADIR=/ukp-storage-1/beck/Repositories/PADA/data
-OUTPUT_DIR=/ukp-storage-1/beck/Repositories/PADA/runs/T5
+OUTPUT_DIR=/ukp-storage-1/beck/Repositories/PADA/runs/T5-topic
 
 DOMAINS=(abortion cloning deathpenalty guncontrol marijuanalegalization minimumwage nuclearenergy schooluniforms)
 for i in "${!DOMAINS[@]}"
@@ -47,5 +47,6 @@ do
   --train_batch_size ${TRAIN_BATCH_SIZE} \
   --eval_batch_size ${EVAL_BATCH_SIZE} \
   --seed ${SEED} \
+  --add_domain \
   --output_dir ${OUTPUT_DIR}
 done

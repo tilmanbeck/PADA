@@ -47,5 +47,6 @@ do
   --train_batch_size ${TRAIN_BATCH_SIZE} \
   --eval_batch_size ${EVAL_BATCH_SIZE} \
   --seed ${SEED} \
+  --add_domain \
   --output_dir ${OUTPUT_DIR}
 done

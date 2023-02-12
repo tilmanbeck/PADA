@@ -1,0 +1,3 @@
+from src.data_processing.stab2018.base import test_Stab2018Dataset_with_domain
+
+test_Stab2018Dataset_with_domain()
